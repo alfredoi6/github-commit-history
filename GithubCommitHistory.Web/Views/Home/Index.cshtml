@@ -1,0 +1,50 @@
+﻿@using System.Text.Json
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@if (!@ViewBag.BaseModel.IsAuthenticated)
+{
+    <div class="intro">
+        <div class="title">
+            Github Commit History
+        </div>
+        <div class="content">
+            <a href="/auth/login">Login with GitHub</a>
+        </div>
+    </div>    
+}
+else
+{
+    @* Table view
+    @foreach (var repo in @ViewBag.Repos)
+    {
+        <div class="repoInfo">
+            @repo.Name (@repo.Owner)
+        </div>
+
+        <table border="0">
+            <thead>
+                <tr>
+                    <th>SHA</th>                    
+                    <th>Author</th>
+                    <th>Date</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var commit in @repo.Commits)
+                {
+                    <tr>
+                        <td>@commit.Sha</td>                        
+                        <td>@commit.Author</td>
+                        <td>@commit.CommitDate</td>
+                        <td>@commit.CommitMesage</td>
+                    </tr>
+                }
+            </tbody>
+        </table>              
+    }*@
+    var json = JsonSerializer.Serialize(ViewBag.Repos, new JsonSerializerOptions { WriteIndented = true, IgnoreNullValues = true });
+    <pre class="json-pretty">@json.Replace("\\u0026", "&").Replace("\\u0027", "'").Replace("\\n", "\n")</pre>
+}
